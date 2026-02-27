@@ -1,0 +1,183 @@
+/*
+===============================================================================
+Data Range Exploration
+===============================================================================
+Purpose:
+    - Explore value ranges, timelines, and distributions across core warehouse
+      tables to understand data coverage and detect anomalies before analysis.
+    - Support data profiling, validation, and analytical readiness checks.
+===============================================================================
+*/
+
+
+
+/*
+===============================================================================
+Customer Data Range Exploration
+Table: gold.dim_customers
+===============================================================================
+*/
+
+-- 1. Customer population overview and key coverage
+SELECT
+    COUNT(*)                    AS total_rows,
+    COUNT(customer_key)         AS populated_customer_keys,
+    COUNT(DISTINCT customer_id) AS unique_customer_ids
+FROM gold.dim_customers;
+
+
+-- 2. Birth date range to understand demographic coverage
+SELECT
+    MIN(birth_date) AS earliest_birth_date,
+    MAX(birth_date) AS latest_birth_date
+FROM gold.dim_customers;
+
+
+-- 3. Customer creation timeline (data onboarding period)
+SELECT
+    MIN(create_date) AS first_customer_record,
+    MAX(create_date) AS latest_customer_record
+FROM gold.dim_customers;
+
+
+-- 4. Country distribution range
+SELECT
+    country,
+    COUNT(*) AS total_customers
+FROM gold.dim_customers
+GROUP BY country
+ORDER BY total_customers DESC;
+
+
+-- 5. Gender value exploration (detect inconsistent labels)
+SELECT
+    gender,
+    COUNT(*) AS total_records
+FROM gold.dim_customers
+GROUP BY gender
+ORDER BY total_records DESC;
+
+
+-- 6. Age range estimation based on birth dates
+SELECT
+    MIN(DATEDIFF(YEAR, birth_date, GETDATE())) AS minimum_age,
+    MAX(DATEDIFF(YEAR, birth_date, GETDATE())) AS maximum_age
+FROM gold.dim_customers
+WHERE birth_date IS NOT NULL;
+
+
+
+
+
+/*
+===============================================================================
+Product Data Range Exploration
+Table: gold.dim_products
+===============================================================================
+*/
+
+-- 7. Product catalog size and identifier coverage
+SELECT
+    COUNT(*) AS total_products,
+    COUNT(DISTINCT product_id) AS unique_product_ids
+FROM gold.dim_products;
+
+
+-- 8. Product lifecycle date range
+SELECT
+    MIN(product_start_date) AS earliest_product_start,
+    MAX(product_start_date) AS latest_product_start
+FROM gold.dim_products;
+
+
+-- 9. Cost distribution boundaries
+SELECT
+    MIN(cost) AS minimum_cost,
+    MAX(cost) AS maximum_cost,
+    AVG(cost) AS average_cost
+FROM gold.dim_products;
+
+
+-- 10. Category and subcategory spread
+SELECT
+    category,
+    subcategory,
+    COUNT(*) AS product_count
+FROM gold.dim_products
+GROUP BY category, subcategory
+ORDER BY product_count DESC;
+
+
+-- 11. Product line diversity
+SELECT
+    product_line,
+    COUNT(*) AS total_products
+FROM gold.dim_products
+GROUP BY product_line
+ORDER BY total_products DESC;
+
+
+-- 12. Maintenance classification inspection
+SELECT
+    maintenance,
+    COUNT(*) AS total_products
+FROM gold.dim_products
+GROUP BY maintenance
+ORDER BY total_products DESC;
+
+
+
+
+
+/*
+===============================================================================
+Sales Data Range Exploration
+Table: gold.fact_sales
+===============================================================================
+*/
+
+-- 13. Sales volume overview
+SELECT
+    COUNT(*) AS total_orders,
+    COUNT(DISTINCT order_number) AS unique_orders
+FROM gold.fact_sales;
+
+
+-- 14. Sales date coverage window
+SELECT
+    MIN(order_date) AS first_order_date,
+    MAX(order_date) AS latest_order_date
+FROM gold.fact_sales;
+
+
+-- 15. Shipping and due date validation range
+SELECT
+    MIN(shipping_date) AS earliest_shipping_date,
+    MAX(shipping_date) AS latest_shipping_date,
+    MIN(due_date) AS earliest_due_date,
+    MAX(due_date) AS latest_due_date
+FROM gold.fact_sales;
+
+
+-- 16. Sales amount distribution boundaries
+SELECT
+    MIN(sales_amount) AS minimum_sales,
+    MAX(sales_amount) AS maximum_sales,
+    AVG(sales_amount) AS average_sales
+FROM gold.fact_sales;
+
+
+-- 17. Quantity range exploration
+SELECT
+    MIN(quantity) AS minimum_quantity,
+    MAX(quantity) AS maximum_quantity,
+    AVG(quantity) AS average_quantity
+FROM gold.fact_sales;
+
+
+-- 18. Price range inspection
+SELECT
+    MIN(price) AS minimum_price,
+    MAX(price) AS maximum_price,
+    AVG(price) AS average_price
+FROM gold.fact_sales;
