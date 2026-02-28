@@ -1,4 +1,6 @@
 # 📊 Data Analytics Project
+<img width="1521" height="591" alt="image" src="https://github.com/user-attachments/assets/eb3c88d5-e56a-4af5-9be8-a81ca40a1050" />
+<img width="1521" height="591" alt="image" src="https://github.com/user-attachments/assets/eb3c88d5-e56a-4af5-9be8-a81ca40a1050" />
 
 ## 📝 Overview
 This project demonstrates a structured **data analysis workflow** on a sales dataset, combining **Exploratory Data Analysis (EDA)**, **Change-Over-Time Analysis**, **Category & Gender Contribution Analysis**, and **Ranking Analysis**.  
